@@ -6,17 +6,14 @@
         {
             "label": "Create Project",
             "type": "shell",
-            "command": "oc new-project travel-agency && oc new-project travel-portal && oc apply --file travel_agency.yaml --namespace travel-agency && oc apply --file travel_portal.yaml --namespace travel-portal",
-            "group": "none"
+            "command": "oc new-project travel-agency && oc new-project travel-portal && oc apply --filename travel_agency.yaml --namespace travel-agency && oc apply --filename travel_portal.yaml --namespace travel-portal",
+            "group": "build"
         },
         {
             "label": "Delete All",
             "type": "shell",
             "command": "oc delete project travel-agency && oc delete project travel-portal",
-            "group": {
-                "kind": "",
-                "isDefault": true
-            }
+            "group": "build"
         }
     ]
 }
