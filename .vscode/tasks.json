@@ -4,6 +4,13 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "Create2: Travel Agency and Travel Portal",
+            "type": "process",
+            "command": "scripts/create.sh",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
             "label": "Create: Travel Agency and Travel Portal",
             "type": "shell",
             "command": "oc patch servicemeshmemberroll/default --type=json --patch '[{\"op\":\"add\",\"path\":\"/spec/members/0\",\"value\":\"travel-agency\"},{\"op\":\"add\",\"path\":\"/spec/members/0\",\"value\":\"travel-portal\"}]' --namespace istio-system && oc new-project travel-agency && oc new-project travel-portal && oc apply --filename travel_agency.yaml --namespace travel-agency && oc apply --filename travel_portal.yaml --namespace travel-portal",
@@ -29,6 +36,14 @@
             "type": "shell",
             "command": "for deployment in $(oc get deployments -o jsonpath='{.items[*].metadata.name}'); do oc patch deployment/${deployment} --type=json --patch '[{\"op\":\"add\",\"path\":\"/spec/template/metadata/annotations\",\"value\":{\"sidecar.istio.io/inject\":\"true\"}}]'; done",
             "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
             "problemMatcher": []
         },
         {
@@ -36,6 +51,14 @@
             "type": "shell",
             "command": "for deployment in $(oc get deployments -o jsonpath='{.items[*].metadata.name}'); do oc patch deployment/${deployment} --type=json --patch '[{\"op\":\"remove\",\"path\":\"/spec/template/metadata/annotations\"}]'; done",
             "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "silent",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
             "problemMatcher": []
         },
         {
