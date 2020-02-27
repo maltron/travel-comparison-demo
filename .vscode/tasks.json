@@ -4,16 +4,46 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Create Project",
+            "label": "Create: Travel Agency and Travel Portal",
             "type": "shell",
-            "command": "oc new-project travel-agency && oc new-project travel-portal && oc apply --filename travel_agency.yaml --namespace travel-agency && oc apply --filename travel_portal.yaml --namespace travel-portal",
-            "group": "build"
+            "command": "oc patch servicemeshmemberroll/default --type=json --patch '[{\"op\":\"add\",\"path\":\"/spec/members/0\",\"value\":\"travel-agency\"},{\"op\":\"add\",\"path\":\"/spec/members/0\",\"value\":\"travel-portal\"}]' --namespace istio-system && oc new-project travel-agency && oc new-project travel-portal && oc apply --filename travel_agency.yaml --namespace travel-agency && oc apply --filename travel_portal.yaml --namespace travel-portal",
+            "group": "build",
+            "problemMatcher": []
         },
         {
-            "label": "Delete All",
+            "label": "Switch: Travel Agency",
             "type": "shell",
-            "command": "oc delete project travel-agency && oc delete project travel-portal",
-            "group": "build"
+            "command": "oc project travel-agency",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Switch: Travel Portal",
+            "type": "shell",
+            "command": "oc project travel-portal",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Istio: Sidecar",
+            "type": "shell",
+            "command": "for deployment in $(oc get deployments -o jsonpath='{.items[*].metadata.name}'); do oc patch deployment/${deployment} --type=json --patch '[{\"op\":\"add\",\"path\":\"/spec/template/metadata/annotations\",\"value\":{\"sidecar.istio.io/inject\":\"true\"}}]'; done",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Istio: REMOVE Sidecar",
+            "type": "shell",
+            "command": "for deployment in $(oc get deployments -o jsonpath='{.items[*].metadata.name}'); do oc patch deployment/${deployment} --type=json --patch '[{\"op\":\"remove\",\"path\":\"/spec/template/metadata/annotations\"}]'; done",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Delete: Travel Agency and Travel Portal",
+            "type": "shell",
+            "command": "oc patch servicemeshmemberroll/default --type=json --patch '[{\"op\":\"remove\",\"path\":\"/spec/members/0\"},{\"op\":\"remove\",\"path\":\"/spec/members/0\"}]' --namespace istio-system && oc delete project travel-agency && oc delete project travel-portal",
+            "group": "build",
+            "problemMatcher": []
         }
     ]
 }
