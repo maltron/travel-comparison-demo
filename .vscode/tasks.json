@@ -1,0 +1,22 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Create Project",
+            "type": "shell",
+            "command": "oc new-project travel-agency && oc new-project travel-portal && oc apply --file travel_agency.yaml --namespace travel-agency && oc apply --file travel_portal.yaml --namespace travel-portal",
+            "group": "none"
+        },
+        {
+            "label": "Delete All",
+            "type": "shell",
+            "command": "oc delete project travel-agency && oc delete project travel-portal",
+            "group": {
+                "kind": "",
+                "isDefault": true
+            }
+        }
+    ]
+}
