@@ -13,5 +13,5 @@ ENV TRAVEL_HOME=/opt/travel_agency \
 RUN apk --no-cache add ca-certificates
 WORKDIR ${TRAVEL_HOME}
 COPY --from=builder ${TRAVEL_HOME}/travel_agency .
-EXPOSE 8080
-CMD ["./travel_agency"]
+EXPOSE 8000
+ENTRYPOINT ["/opt/travel_agency/travel_agency"]

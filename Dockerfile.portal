@@ -1,22 +1,9 @@
-# FROM centos:centos7
-
-# LABEL maintainer="ponce.ballesteros@gmail.com"
-
-# ENV TRAVEL_HOME=/opt/travel_portal \
-#     PATH=$TRAVEL_HOME:$PATH
-    
-# WORKDIR $TRAVEL_HOME
-
-# COPY travel_portal $TRAVEL_HOME/
-
-# ENTRYPOINT ["/opt/travel_portal/travel_portal"]
-
 FROM golang:latest as builder
 ENV TRAVEL_HOME=/opt/travel_portal \
     PATH=${TRAVEL_HOME}:${PATH}
 WORKDIR ${TRAVEL_HOME}
 COPY travel_portal/travel_portal.go ${TRAVEL_HOME}/travel_portal.go
-RUN go get github.com/golang/glog && CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
+RUN go get github.com/golang/glog && CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o travel_portal .
 
 FROM alpine:latest
 LABEL maintainer="maltron@gmail.com"
@@ -24,6 +11,6 @@ ENV TRAVEL_HOME=/opt/travel_portal \
     PATH=${TRAVEL_HOME}:${PATH}
 RUN apk --no-cache add ca-certificates
 WORKDIR ${TRAVEL_HOME}
-COPY --from=builder ${TRAVEL_HOME}/main .
-EXPOSE 8080
-CMD ["./main"]
+COPY --from=builder ${TRAVEL_HOME}/travel_portal .
+EXPOSE 8000
+ENTRYPOINT ["/opt/travel_portal/travel_portal"]
