@@ -7,19 +7,22 @@
             "label": "CLEAN: Remove all existing Docker images",
             "type": "shell",
             "group": "build",
-            "command": "docker rmi -f $(docker images | grep -v REPOSITORY | awk '{ print $3 }')"
+            "command": "docker rmi -f $(docker images | grep -v REPOSITORY | awk '{ print $3 }')",
+            "problemMatcher": []
         },
         {
             "label": "Docker Build: Travel Agency",
             "type": "shell",
-            "command": "docker build --tag quay.io/maltron/travel:agency --force-rm --no-cache --rm -f Dockerfile.portal ${workspaceFolder} && docker push quay.io/maltron/travel:agency",
-            "group": "build"
+            "command": "docker build --tag quay.io/maltron/travel:agency --force-rm --no-cache --rm -f Dockerfile.agency ${workspaceFolder} && docker push quay.io/maltron/travel:agency",
+            "group": "build",
+            "problemMatcher": []
         },
         {
             "label": "Docker Build: Travel Portal",
             "type": "shell",
             "command": "docker build --tag quay.io/maltron/travel:portal --force-rm --no-cache --rm -f Dockerfile.portal ${workspaceFolder} && docker push quay.io/maltron/travel:portal",
-            "group": "build"
+            "group": "build",
+            "problemMatcher": []
         },
         {
             "label": "Create2: Travel Agency and Travel Portal",
