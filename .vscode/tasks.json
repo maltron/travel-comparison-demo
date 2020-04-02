@@ -4,6 +4,24 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "CLEAN: Remove all existing Docker images",
+            "type": "shell",
+            "group": "build",
+            "command": "docker rmi -f $(docker images | grep -v REPOSITORY | awk '{ print $3 }')"
+        },
+        {
+            "label": "Docker Build: Travel Agency",
+            "type": "shell",
+            "command": "docker build --tag quay.io/maltron/travel:agency --force-rm --no-cache --rm -f Dockerfile.portal ${workspaceFolder} && docker push quay.io/maltron/travel:agency",
+            "group": "build"
+        },
+        {
+            "label": "Docker Build: Travel Portal",
+            "type": "shell",
+            "command": "docker build --tag quay.io/maltron/travel:portal --force-rm --no-cache --rm -f Dockerfile.portal ${workspaceFolder} && docker push quay.io/maltron/travel:portal",
+            "group": "build"
+        },
+        {
             "label": "Create2: Travel Agency and Travel Portal",
             "type": "process",
             "command": "scripts/create.sh",

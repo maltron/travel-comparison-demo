@@ -1,0 +1,17 @@
+FROM golang:latest as builder
+ENV TRAVEL_HOME=/opt/travel_agency \
+    PATH=${TRAVEL_HOME}:${PATH}
+WORKDIR ${TRAVEL_HOME}
+COPY travel_agency/travel_agency.go ${TRAVEL_HOME}/travel_agency.go
+RUN go get github.com/golang/glog github.com/gorilla/mux && \
+    CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o travel_agency .
+
+FROM alpine:latest
+LABEL maintainer="maltron@gmail.com"
+ENV TRAVEL_HOME=/opt/travel_agency \
+    PATH=${TRAVEL_HOME}:${PATH}
+RUN apk --no-cache add ca-certificates
+WORKDIR ${TRAVEL_HOME}
+COPY --from=builder ${TRAVEL_HOME}/travel_agency .
+EXPOSE 8080
+CMD ["./travel_agency"]
